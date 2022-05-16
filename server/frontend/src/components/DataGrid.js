@@ -7,7 +7,7 @@ import {
 } from '@mui/x-data-grid';
 import {Button} from "@mui/material";
 import {Context} from "../Context"
-import {useContext} from "react";
+import {useCallback, useContext} from "react";
 import {useHistory, useNavigate} from "react-router-dom";
 import axios from "axios";
 
@@ -21,7 +21,7 @@ export default function DataGridAC(props) {
   function getColumns(){
     let columnsArray = []
     Object.keys(props.data[0]).forEach(el => {
-      columnsArray.push({field: el, headerName: el})
+      columnsArray.push({field: el, headerName: el, width: 200})
     })
     return columnsArray
   }
@@ -46,9 +46,10 @@ export default function DataGridAC(props) {
       })
     })
     shownData = shownDataTemp
+    console.log(shownData)
   }
 
-  async function handleUploadData(){
+  const handleUploadData = useCallback(async () => {
     await fetch('api/upload-file', {
       method: 'post',
       headers: {
@@ -58,11 +59,15 @@ export default function DataGridAC(props) {
     }).then((response) => {
       return response.json()
     }).then(data => {
+      console.log(data)
       setContext(data)
       history.push({pathname: '/chart'})
     })
+  })
 
-  }
+  /*async function handleUploadData(){
+
+  }*/
 
   function CustomToolbar() {
     return (

@@ -17,34 +17,32 @@ class UploadFileForm(forms.Form):
 class FileUploader(APIView):
     def post(self, request, format=None):
         global res_data
-        ONE_VAR = 1
-        TWO_VAR = 2
-        THREE_VAR = 3
+        ONE_COL = 1
+        TWO_COL = 2
+        THREE_COL = 3
+        HAS_DT = False
         if not self.request.session.exists(self.request.session.session_key):
             self.request.session.create()
         jsonReq = request.body.decode('utf-8')
         df = pd.DataFrame(json.loads(jsonReq))
-        try:
+        if len(df.columns) == ONE_COL:
+            res_data = DataAnalyzer.analyze_one_col(df)
+        elif len(df.columns) >= TWO_COL:
             for column in df:
-                df[column] = pd.to_numeric(df[column])
-            df.sort_values(by=df.iloc[:,0])
-        except ValueError:
-            pass
-        try:
-            for column in df:
-                df[column] = pd.to_datetime(df[column])
-            df.sort_values(by=df.iloc[:,0])
-        except ValueError:
-            pass
-        if len(df.columns) == ONE_VAR:
-            #df = df.pivot_table(columns=df.iloc[:,0], aggfunc='size')
-            df = df.iloc[:,0].value_counts()
-            js = json.loads(df.to_json(orient = 'columns'))
-            print(df.name)
-            res_data = {
-                'header': df.name,
-                'keys': list(js.keys()),
-                'values': list(js.values())
-            }
-        print(JsonResponse(res_data))
+                try:
+                    df[column] = pd.to_numeric(df[column])
+                    df.sort_values(by=column, kind = "mergesort")
+                    continue
+                except ValueError:
+                    pass
+                try:
+                    df[column] = pd.to_datetime(df[column])
+                    df.sort_values(by=column, kind = "mergesort")
+                    HAS_DT = True
+                except ValueError:
+                    pass
+            if len(df.columns) == TWO_COL:
+                res_data = DataAnalyzer.analyze_two_col(df, HAS_DT)
+            else:
+                res_data = DataAnalyzer.analyze_three_col(df, HAS_DT)
         return JsonResponse(res_data)

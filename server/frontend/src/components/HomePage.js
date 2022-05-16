@@ -8,6 +8,7 @@ import Box from '@mui/material/Box'
 import TabPanel from './TabPanel'
 import DataGridAC from "./DataGrid"
 import CSVReader from "./CSVReader";
+import {Button, Input} from "@mui/material";
 
 function a11yProps(index) {
   return {
@@ -60,10 +61,23 @@ export default function HomePage() {
 
           </TabPanel>
           <TabPanel value={value} index={1} dir={theme.direction}>
-            Item Two
+            <div>
+              <Input placeholder="Connection string"/>
+            </div>
+            <div>
+              <Input placeholder="Table name"/>
+            </div>
+            <div>
+              <Button variant="contained">UPLOAD DATA</Button>
+            </div>
           </TabPanel>
           <TabPanel value={value} index={2} dir={theme.direction}>
-            Item Three
+            <div>
+              <Input placeholder="API URL"/>
+            </div>
+            <div>
+              <Button variant="contained">UPLOAD DATA</Button>
+            </div>
           </TabPanel>
         </SwipeableViews>
       </Box>
