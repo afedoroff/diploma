@@ -31,8 +31,8 @@ const styles = {
     background: 'linear-gradient(to bottom, #EEE, #DDD)',
     borderRadius: 20,
     display: 'flex',
-    height: 100,
-    width: 100,
+    height: 70,
+    width: 'auto',
     position: 'relative',
     zIndex: 10,
     flexDirection: 'column',
@@ -70,14 +70,7 @@ const styles = {
   },
   default: {
     borderColor: GREY,
-  },
-  remove: {
-    height: 23,
-    position: 'absolute',
-    right: 6,
-    top: 6,
-    width: 23,
-  },
+  }
 };
 
 export default function CSVReader(props) {
@@ -132,9 +125,6 @@ export default function CSVReader(props) {
                     </span>
                           <span style={styles.name}>{acceptedFile.name}</span>
                         </div>
-                        <div style={styles.progressBar}>
-                          <ProgressBar />
-                        </div>
                         <div
                             {...getRemoveFileProps()}
                             style={styles.remove}
@@ -147,7 +137,6 @@ export default function CSVReader(props) {
                               setRemoveHoverColor(DEFAULT_REMOVE_HOVER_COLOR);
                             }}
                         >
-                          <Remove color={removeHoverColor} />
                         </div>
                       </div>
                     </>

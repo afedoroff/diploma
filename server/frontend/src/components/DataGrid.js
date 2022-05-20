@@ -46,7 +46,6 @@ export default function DataGridAC(props) {
       })
     })
     shownData = shownDataTemp
-    console.log(shownData)
   }
 
   const handleUploadData = useCallback(async () => {
@@ -59,20 +58,15 @@ export default function DataGridAC(props) {
     }).then((response) => {
       return response.json()
     }).then(data => {
-      console.log(data)
       setContext(data)
       history.push({pathname: '/chart'})
     })
   })
 
-  /*async function handleUploadData(){
-
-  }*/
-
   function CustomToolbar() {
     return (
         <GridToolbarContainer>
-          <GridToolbarColumnsButton />
+          <GridToolbarColumnsButton/>
           <GridToolbarExport printOptions={{ disableToolbarButton: true }}/>
           <GridToolbarDensitySelector/>
           <Button variant="contained"
@@ -89,7 +83,7 @@ export default function DataGridAC(props) {
   }
 
   return (
-      <div style={{height: 400, width: "auto"}}>
+      <div style={{height: 520, width: "auto"}}>
         <DataGrid
             rows={getRows()}
             columns={getColumns()}

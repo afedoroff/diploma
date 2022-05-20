@@ -75,7 +75,6 @@ export default function ApexChart() {
       for (let i = 0; i < context.xaxis.length; i++) {
         data.push({x: context.xaxis[i], y: context.yaxis[i]})
       }
-      console.log(data)
       setConfig({
         series: [
           {
@@ -87,7 +86,7 @@ export default function ApexChart() {
             show: false
           },
           chart: {
-            height: 500,
+            height: 600,
             type: 'treemap'
           },
           title: {
@@ -95,21 +94,16 @@ export default function ApexChart() {
           }
         }
       })
-    } else if (context.type == "line") {
-      let dateArray = []
-      for (let date in context.xaxis) {
-        dateArray.push(new Date(date).toLocaleDateString('en-us', {year: "numeric", month: "short", day: "numeric"}))
-      }
+    } else if (context.type == "line_date") {
+      context.type = 'line'
       setConfig({
-        series: [{
-          data: context.yaxis
-        }],
+        series: context.series,
         options: {
           chart: {
             height: 350,
             type: 'line',
             zoom: {
-              enabled: false
+              enabled: true
             }
           },
           dataLabels: {
@@ -118,32 +112,67 @@ export default function ApexChart() {
           stroke: {
             curve: 'straight'
           },
-          title: {
-            text: 'Product Trends by Month',
-            align: 'left'
-          },
           grid: {
             row: {
-              colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns
               opacity: 0.5
             },
           },
-          xaxis: {
-            categories: dateArray,
-            labels: {
-              rotate: -45
-            }
-          }
+          xaxis: context.xaxis
         },
       })
     } else if (context.type == "bar_date") {
       context.type = 'bar'
-      let dateArray = []
-      for (let date in context.xaxis) {
-        dateArray.push(new Date(date).toLocaleDateString('en-us', {year: "numeric", month: "short", day: "numeric"}))
-      }
       setConfig({
 
+        series: context.series,
+        options: {
+          chart: {
+            type: 'bar',
+            height: 350
+          },
+          plotOptions: {
+            bar: {
+              horizontal: false,
+              columnWidth: '55%',
+              endingShape: 'rounded',
+            },
+          },
+          dataLabels: {
+            enabled: false
+          },
+          stroke: {
+            show: true,
+            width: 2,
+          },
+          xaxis: context.xaxis,
+          fill: {
+            opacity: 1
+          }
+        }
+      })
+    } else if (context.type == "area") {
+      setConfig({
+        series: context.series,
+        options: {
+          chart: {
+            height: 350,
+            type: 'area'
+          },
+          dataLabels: {
+            enabled: false
+          },
+          stroke: {
+            curve: 'smooth'
+          },
+          xaxis: {
+            type: 'datetime',
+            categories: context.xaxis.categories
+          },
+        },
+      })
+    } else if (context.type == "bar_num") {
+      context.type = 'bar'
+      setConfig({
         series: [{
           name: 'Net Profit',
           data: context.yaxis
@@ -168,12 +197,31 @@ export default function ApexChart() {
             width: 2,
           },
           xaxis: {
-            categories: dateArray
+            categories: context.xaxis
           },
           fill: {
             opacity: 1
           }
         }
+      })
+    } else if (context.type == "scatter") {
+      log(context)
+      setConfig({
+        series: [{
+          name: "SAMPLE A",
+          data: context.data1
+        },{
+          name: "SAMPLE B",
+          data: context.data2
+        }],
+        chart: {
+          height: 350,
+          type: 'scatter',
+          zoom: {
+            enabled: true,
+            type: 'xy'
+          }
+        },
       })
     }
   }, context)
@@ -182,7 +230,7 @@ export default function ApexChart() {
           options={config.options}
           series={config.series}
           type={context.type}
-          height={400}
+          height={600}
       />
   )
 }

@@ -14,7 +14,7 @@ class UploadFileForm(forms.Form):
     title = forms.CharField(max_length=50)
     file = forms.FileField()
 
-class FileUploader(APIView):
+class DataUploader(APIView):
     def post(self, request, format=None):
         global res_data
         ONE_COL = 1
@@ -31,7 +31,6 @@ class FileUploader(APIView):
             for column in df:
                 try:
                     df[column] = pd.to_numeric(df[column])
-                    df.sort_values(by=column, kind = "mergesort")
                     continue
                 except ValueError:
                     pass
@@ -41,8 +40,8 @@ class FileUploader(APIView):
                     HAS_DT = True
                 except ValueError:
                     pass
-            if len(df.columns) == TWO_COL:
+            if len(df.columns) >= TWO_COL:
                 res_data = DataAnalyzer.analyze_two_col(df, HAS_DT)
-            else:
-                res_data = DataAnalyzer.analyze_three_col(df, HAS_DT)
+            #else:
+            #    res_data = DataAnalyzer.analyze_three_col(df)
         return JsonResponse(res_data)
